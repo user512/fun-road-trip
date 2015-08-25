@@ -1,14 +1,47 @@
 <head>
-  <title>fun-road-trip</title>
+  <title>Fun Road Trip</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
+  <div class="container">
+    <header>
+      <h1>Fun Road Trip</h1>
+      {{> loginButtons}}
 
-  {{> hello}}
+      {{#if currentUser}}
+      <form class="new-chat">
+        <input type="text" name="title" placeholder="Chat with me">
+        <input type="submit" value="Submit" class="send">
+      </form>
+      {{/if}}
+
+    </header>
+    <ul>
+      <!-- check chats template -->
+      {{#each chats}}
+        {{> chat}}
+      {{/each}}
+    </ul>
+  </div>
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="chat">
+  <li>
+
+    {{#if isOwner}}
+      <button class="toggle-private">
+        {{#if private}}
+          Private
+        {{else}}
+          Public
+        {{/if}}
+      </button>
+    {{/if}}
+    <span class="text">{{title}}</span>
+
+    {{#if isOwner}}
+    <button class="delete">Remove</button>
+    {{/if}}
+  </li>
 </template>
