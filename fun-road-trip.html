@@ -8,7 +8,7 @@
     <header>
       <h1>Fun Road Trip</h1>
       {{> loginButtons}}
-
+      <button id="take-photo">Send a picture</button>
       {{#if currentUser}}
       <form class="new-chat">
         <input type="text" name="title" placeholder="Chat with me">
@@ -20,7 +20,11 @@
     <ul>
       <!-- check chats template -->
       {{#each chats}}
-        {{> chat}}
+        {{#if photo}}
+          <img src="{{photo}}">
+        {{else}}
+          {{> chat}}
+        {{/if}}
       {{/each}}
     </ul>
   </div>

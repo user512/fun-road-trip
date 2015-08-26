@@ -2,12 +2,23 @@
 
 Chats = new Mongo.Collection('chats');
 
+var cameraOptions = {
+  width: 800,
+  height: 600
+};
+
+
 if (Meteor.isClient) {
   Meteor.subscribe("chats");  // This is to subscribe the server side data
 
   Template.body.helpers({
     chats: function() {
-        return Chats.find();
+      return Chats.find(
+        { },
+        {
+          sort: { createdAt: -1 }
+        }
+        );
     }
   });
 
@@ -19,7 +30,20 @@ if (Meteor.isClient) {
         Meteor.call("addChat", title);
       }
       event.target.title.value = "";
-    }
+    },
+    'submit #take-photo': function () {
+      MeteorCamera.getPicture(cameraOptions, function (error, data) {
+        Session.set("photo", data);
+        if (error) {
+          console.log(error);
+        } else {
+        Chats.insert({
+          photo: data,
+          createdAt: new Date()
+        });
+      }
+    });
+    },
   });
 
   Accounts.ui.config({
@@ -42,9 +66,9 @@ Meteor.methods({
   addChat: function(title){
     Chats.insert(
     {
-        title: title,
-        createdAt: new Date(),
-        owner: Meteor.userId()
+      title: title,
+      createdAt: new Date(),
+      owner: Meteor.userId()
     }
     );
   },
