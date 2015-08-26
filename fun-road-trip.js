@@ -33,12 +33,7 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
   Meteor.publish("chats", function(){
-    return Chats.find({  //This is Mongo DB query
-      $or: [
-        { private: {$ne: true} },  //$ne means not equal in MongoDB
-        { owner: this.userId }
-      ]
-    });
+    return Chats.find();
   });
 }
 
@@ -53,21 +48,4 @@ Meteor.methods({
     }
     );
   },
-
-  updateChat: function(id, checked) {
-    Chats.update(id, {$set: {checked: checked}});
-  },
-
-  deleteChat: function(id){
-    Chats.remove(id);
-  },
-
-  setPrivate: function(id, private){
-    var task = Chats.findOne(id);
-
-    if (task.owner !== Meteor.userId()){
-      throw new Meteor.Error('not-authorized');
-    }
-    Chats.update(id, {$set: {private: private}});
-  }
 });
